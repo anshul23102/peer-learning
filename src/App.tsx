@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 import Navbar from "./components/Navbar";
 import Chatbot from "./components/Chatbot";
+import StudyRooms from "./components/StudyRooms";
+import Room from "./components/Room";
 
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -18,6 +19,7 @@ import Dashboard from "./pages/Dashboard";
 import Discover from "./pages/Discover";
 import Sessions from "./pages/Sessions";
 import Messages from "./pages/Messages";
+import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
@@ -29,9 +31,11 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import AIPage from "./pages/aipage";
 import FloatingAI from "./components/FloatingAI";
+import ContributorDashboard from "./pages/ContributorDashboard";
+const ResourceHub = React.lazy(() => import("@/pages/ResourceHub"));
 
-import { supabase } from "./lib/supabase";
 import BecomeMentor from "./pages/BecomeMentor";
+import { useAuth } from "@/contexts/useAuth";
 
 const queryClient = new QueryClient();
 
@@ -44,21 +48,7 @@ const WithNav = ({ children }: { children: React.ReactNode }) => (
 
 function App() {
 
-  // GLOBAL USER STATE
-  const [user, setUser] = useState<any>(null);
-
-  // FETCH USER ONLY ONCE
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      setUser(user);
-    };
-
-    getUser();
-  }, []);
+  const { user } = useAuth();
 
   // ✨ Sparkle Effect
   useEffect(() => {
@@ -102,23 +92,6 @@ function App() {
 
   }, []);
 
-  // TEST SUPABASE
-  useEffect(() => {
-
-    const test = async () => {
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*");
-
-      console.log("DATA:", data);
-      console.log("ERROR:", error);
-    };
-
-    test();
-
-  }, []);
-
   return (
 
     <QueryClientProvider client={queryClient}>
@@ -130,8 +103,6 @@ function App() {
 
         <BrowserRouter>
 
-          <AuthProvider>
-
             <div id="sparkle-container"></div>
 
             <Routes>
@@ -140,11 +111,7 @@ function App() {
   path="/"
   element={
     user ? (
-      <ProtectedRoute>
-        <WithNav>
-          <Dashboard />
-        </WithNav>
-      </ProtectedRoute>
+      <Navigate to="/dashboard" replace />
     ) : (
       <Index />
     )
@@ -176,6 +143,29 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
+              <Route
+                path="/rooms"
+                element={
+                  <ProtectedRoute>
+                    <WithNav>
+                      <StudyRooms />
+                    </WithNav>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/rooms/:id"
+                element={
+                  <ProtectedRoute>
+                    <WithNav>
+                      <Room />
+                    </WithNav>
+                  </ProtectedRoute>
+                }
+              />
+
               <Route path="/become-mentor" element={<BecomeMentor />} />
 
               <Route
@@ -213,6 +203,17 @@ function App() {
               />
 
               <Route
+                path="/chat"
+                element={
+                  <ProtectedRoute>
+                    <WithNav>
+                      <Chat />
+                    </WithNav>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/notifications"
                 element={
                   <ProtectedRoute>
@@ -229,6 +230,17 @@ function App() {
                   <ProtectedRoute>
                     <WithNav>
                       <Leaderboard />
+                    </WithNav>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/resources"
+                element={
+                  <ProtectedRoute>
+                    <WithNav>
+                      <ResourceHub />
                     </WithNav>
                   </ProtectedRoute>
                 }
@@ -265,11 +277,18 @@ function App() {
 
               <Route path="*" element={<NotFound />} />
 
+              <Route
+                path="/contributor-dashboard"
+                element={
+                    <WithNav>
+                      <ContributorDashboard />
+                    </WithNav>
+                }
+              />
+
             </Routes>
 
             <Chatbot />
-
-          </AuthProvider>
 
           <FloatingAI />
 

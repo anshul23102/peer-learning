@@ -265,6 +265,18 @@ Thanks to all the amazing contributors who helped improve this project ❤️
 
 ---
 
+# 💖 Contributors
+
+Thanks to all the amazing people who contribute to **Peer Learning** 🚀
+
+<p align="center">
+  <a href="https://github.com/durdana3105/peer-learning/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=durdana3105/peer-learning" alt="Contributors"/>
+  </a>
+</p>
+
+---
+
 # 👩‍💻 Author
 
 ## Durdana Sultana
@@ -287,6 +299,17 @@ If you like this project, please give it a ⭐ on GitHub.
 </a>
 
 </p>
+
+<p align="center">
+  <a href="https://github.com/durdana3105/peer-learning/stargazers">
+    <img src="https://img.shields.io/github/stars/durdana3105/peer-learning?style=social" alt="Stars">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/durdana3105/peer-learning/network/members">
+    <img src="https://img.shields.io/github/forks/durdana3105/peer-learning?style=social" alt="Forks">
+  </a>
+</p>
+
 
 ---
 
