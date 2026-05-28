@@ -38,11 +38,17 @@ const ALLOWED_MODELS = new Set([
 // Server-side cap on tokens per request, regardless of what the caller sends.
 const MAX_TOKENS_CAP = 512;
 
+// Fixed system prompt prepended to every conversation server-side.
+// Callers cannot override this via the request body, which prevents
+// prompt injection attacks that would let them alter the assistant persona
+// or bypass content guidelines.
+const SYSTEM_PROMPT =
+  "You are a helpful peer-learning assistant. Answer questions about coding, study techniques, and academic topics in a clear and supportive way.";
+
 router.post("/chat", requireAuth, rateLimiter, async (req, res) => {
   try {
     const {
       messages,
-      systemPrompt,
       model = "openai/gpt-3.5-turbo",
       max_tokens,
       temperature = 0.7,
@@ -78,9 +84,7 @@ router.post("/chat", requireAuth, rateLimiter, async (req, res) => {
       MAX_TOKENS_CAP
     );
 
-    const chatMessages = systemPrompt
-      ? [{ role: "system", content: String(systemPrompt) }, ...messages]
-      : messages;
+    const chatMessages = [{ role: "system", content: SYSTEM_PROMPT }, ...messages];
 
     const response = await openrouter.chat.completions.create({
       model,
