@@ -20,7 +20,9 @@ import {
   Rocket,
   Briefcase,
   Activity,
+  Menu, X
 } from "lucide-react";
+
 
 import { Button } from "@/components/ui/button";
 import {
@@ -157,6 +159,7 @@ const faqs = [
 export default function Landing() {
   const { scrollYProgress } = useScroll();
   const { setTheme } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const [open, setOpen] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -367,7 +370,7 @@ const scrollToTop = () => {
             </a>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -420,7 +423,50 @@ const scrollToTop = () => {
               </Button>
             </Link>
           </div>
+        {/* MOBILE BUTTON */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="rounded-lg border border-white/10 bg-white/5 p-3 text-white md:hidden active:scale-95"
+        >
+
+          {mobileOpen ? <X /> : <Menu />}
+
+        </button>
         </div>
+        {/* MOBILE NAVBAR */}
+       {mobileOpen && (
+  <div className="md:hidden border-t border-cyan-400/10 bg-[#020617] px-6 py-4">
+    <div className="flex flex-col gap-3">
+      <a href="#features" className="text-slate-300">
+        Features
+      </a>
+
+      <a href="#community" className="text-slate-300">
+        Communities
+      </a>
+
+      <a href="/contributor-dashboard" className="text-slate-300">
+        Contributor Dashboard
+      </a>
+
+      <a href="#faq" className="text-slate-300">
+        FAQ
+      </a>
+
+      <Link to="/login">
+        <Button className="w-full">
+          Login
+        </Button>
+      </Link>
+
+      <Link to="/signup">
+        <Button className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-black">
+          Get Started
+        </Button>
+      </Link>
+    </div>
+  </div>
+)}
       </nav>
 
       {/* Hero */}
