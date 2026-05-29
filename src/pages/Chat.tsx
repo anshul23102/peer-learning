@@ -123,26 +123,26 @@ const Chat = () => {
           schema: "public",
           table: "profiles",
         },
-        () => {
-          void supabase
-            .from("profiles")
-            .select("*")
-            .neq("id", currentUser.id)
-            .order("name", { ascending: true })
-            .limit(100)
-            .then(({ data: profileData }) => {
-              void supabase
-                .from("users")
-                .select("*")
-                .neq("id", currentUser.id)
-                .order("name", { ascending: true })
-                .limit(100)
-                .then(({ data: userData }) => {
-                  setUsers(
-                    mergeUsers((profileData ?? []) as Profile[], (userData ?? []) as UserRow[])
-                  );
-                });
-            });
+        (payload) => {
+          if (payload.eventType === "DELETE") {
+            setUsers((prev) => prev.filter((u) => u.id !== payload.old.id));
+            return;
+          }
+
+          const updatedProfile = payload.new as Profile;
+          if (updatedProfile.id === currentUser.id) return;
+
+          setUsers((prev) => {
+            const index = prev.findIndex((u) => u.id === updatedProfile.id);
+            if (index !== -1) {
+              const newUsers = [...prev];
+              newUsers[index] = { ...newUsers[index], ...updatedProfile };
+              return newUsers.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            } else {
+              const newUsers = [...prev, updatedProfile];
+              return newUsers.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            }
+          });
         }
       )
       .subscribe();
