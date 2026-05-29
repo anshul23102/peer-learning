@@ -9,7 +9,6 @@ const router = express.Router();
 // OpenRouter is OpenAI-compatible, so the OpenAI SDK works by pointing at the
 // OpenRouter base URL. The API key is read from the server environment and is
 // never sent to the client.
-console.log(process.env.OPENROUTER_API_KEY);
 const openrouter = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,   // must not be undefined
   baseURL: "https://openrouter.ai/api/v1",
@@ -18,15 +17,6 @@ const openrouter = new OpenAI({
     "X-Title": "Peer Learning AI",
   },
 });
-
-// const openrouter = new OpenAI({
-//   apiKey: process.env.OPENROUTER_API_KEY,
-//   baseURL: "https://openrouter.ai/api/v1",
-//   defaultHeaders: {
-//     "HTTP-Referer": process.env.SITE_URL || "http://localhost:8080",
-//     "X-Title": "Peer Learning AI",
-//   },
-// });
 
 // Allowed models. Requests specifying any other model are rejected to
 // prevent cost escalation via expensive third-party models.
@@ -97,8 +87,6 @@ router.post("/chat", requireAuth, rateLimiter, async (req, res) => {
   } catch (error) {
     console.error("Chat route error:", error);
     res.status(500).json({ error: error.message || "AI request failed" });
-
-    // res.status(500).json({ error: "Failed to get a response from the AI service." });
   }
 });
 
