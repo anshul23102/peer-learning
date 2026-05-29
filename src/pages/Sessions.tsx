@@ -345,13 +345,7 @@ const [summaryLoading, setSummaryLoading] =
             placeholder="Search sessions..."
             value={search}
             onChange={(e) => {
-            setMessage(e.target.value);
-
-            setIsTyping(true);
-
-            setTimeout(() => {
-              setIsTyping(false);
-            }, 1500);
+            setSearch(e.target.value);
           }}
             className="w-full bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl py-4 pl-14 pr-4 outline-none focus:border-cyan-400 transition"
           />
